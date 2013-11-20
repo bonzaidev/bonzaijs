@@ -1,0 +1,61 @@
+<html>
+
+<head>
+
+
+<script>
+var qr,phone;
+var num;
+var img;
+var str;
+
+window.onload=function()
+{
+qr=document.getElementById('qr');
+phone=document.getElementById('phone');
+}
+
+function run()
+{
+num=phone.value;
+str="http://chart.apis.google.com/chart?cht=qr&chs=500x500&choe=UTF-8&chld=H&chl="+num;
+if(num.length==0)
+{
+alert("input something");
+}
+else
+{
+/*
+img=new Image();
+img.src=str;
+qr.appendChild(img);
+*/
+
+qr.innerHTML='<img src='+str+'/>';
+alert(document.URL);
+//document.getElementsByTagName('input')[0].style.display='none';
+//document.getElementsByTagName('input')[1].style.display='none';
+}
+}
+
+
+
+</script>
+
+</head>
+
+
+
+<body>
+
+<input type="text" value="" id="phone"/>
+
+<input type="button" onclick="run();" value="submit"/>
+
+<div id="qr">
+</div>
+
+</body>
+
+
+</html>

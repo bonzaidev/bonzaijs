@@ -1,0 +1,163 @@
+<html>
+
+
+<head>
+
+
+<script>
+var values;
+var ajaxCon,ajaxUpdate;
+var response;
+var ms1,ms2,s1,s2;
+var timer;
+var total;
+var gif;
+var width,height;
+var str1,str;
+var play=true;
+var numb;
+
+window.onload=function()
+{
+values=document.getElementById('values');
+
+width=window.innerWidth;
+height=window.innerHeight;
+
+str1=document.URL;
+str=str1.substring(str1.indexOf('?'),str1.length);
+
+gif=new Image();
+gif.src=document.getElementsByTagName('img')[0].src+'?rnd='+Math.random()+'';
+gif.style.display='block';
+gif.style.left=0+'px';
+gif.style.position='absolute';
+gif.width=width;
+gif.height=(width*480)/640;
+gif.style.top=(height-gif.height)/2+'px';
+
+for(var i=0;i<str.length;i++)
+{
+if(str.charCodeAt(i)<48 || str.charCodeAt(i)>57)
+play=false;
+}
+
+if(play && str.length==10)
+{
+numb=parseInt(str);
+
+
+try
+{
+ajaxCon = new XMLHttpRequest();
+}
+catch (e)
+{
+try
+{
+ajaxCon = new ActiveXObject("Msxml2.XMLHTTP");
+}
+catch (e)
+{
+try
+{
+ajaxCon = new ActiveXObject("Microsoft.XMLHTTP");
+}
+catch (e)
+{
+alert("Update your Browser");
+return false;
+}
+}
+}
+
+/*
+try
+{
+ajaxUpdate = new XMLHttpRequest();
+}
+catch (e)
+{
+try
+{
+ajaxUpdate = new ActiveXObject("Msxml2.XMLHTTP");
+}
+catch (e)
+{
+try
+{
+ajaxUpdate = new ActiveXObject("Microsoft.XMLHTTP");
+}
+catch (e)
+{
+alert("Update your Browser");
+return false;
+}
+}
+}
+*/
+
+
+ajaxCon.open("GET","loopAnimAjax.php?number="+str,true);
+ajaxCon.send(null);
+
+ajaxCon.onreadystatechange=function()
+{
+if(ajaxCon.readyState==4)
+{
+response=ajaxCon.responseText.split(',');
+console.log(response[0]+" "+response[1]+" "+response[2]+" "+response[3]+" "+response[4]);
+timer=(((parseInt(response[0])-1)*13500)-(((parseInt(response[4])*1000)+(parseFloat(response[3])*1000))-((parseInt(response[2])*1000)+(parseFloat(response[1])*1000))));
+total=parseInt(response[0]);
+setTimeout('cracker();',timer);
+}
+}
+
+}
+
+}
+
+
+
+function cracker()
+{
+//values.innerHTML='started';
+document.getElementById('img').appendChild(gif);
+setTimeout('crack();',15000);
+}
+
+
+function crack()
+{
+gif.parentNode.removeChild(gif);
+//values.innerHTML='ended';
+var queryString = "?total=" + total + "&number=" + numb;
+ajaxCon.open("GET", "loopAjaxend.php" + queryString, true);
+ajaxCon.send(null);
+}
+
+
+
+
+
+</script>
+
+
+</head>
+
+
+
+<body>
+
+<div id="values" style="left:0; top:0; position:absolute">
+
+</div>
+
+<div id="img">
+</div>
+
+<img src="car-anim.gif" style="display:none; left:0; top:0; position:absolute"></img>
+
+</body>
+
+</html>

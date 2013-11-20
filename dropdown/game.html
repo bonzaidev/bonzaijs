@@ -1,0 +1,175 @@
+<html>
+
+<head>
+
+
+<script src="config.js">
+</script>
+
+
+<script>
+//<link rel="stylesheet" type="text/css" href="game.css">
+var holder,game,score,bg;
+var images= new Array();
+var items = new Array();
+var count=0;
+var points=0;
+var i,j,k;
+var t,x,y;
+var startx,newx;
+var width,height,w,h;
+
+count=parseInt(total.count);
+
+for(i=0;i<count;i++)
+{
+	images[i]=new Image();
+	items[i]=dropItem[i].src;
+	images[i].src=items[i];
+	images[i].style.display='none';
+	images[i].style.position='absolute';
+}
+
+holder=new Image();
+holder.src=catcher.src;
+holder.style.display='none';
+holder.style.position='absolute';
+
+
+window.onload=function()
+{
+//alert(dropItem[0].src);
+	console.log("load");
+	width=window.innerWidth;
+	height=window.innerHeight;
+	game=get('game');
+	score=get('score');
+	bg=get('score');
+	console.log("load over");
+	set();
+	window.addEventListener('touchstart',touchStart,false);
+	window.addEventListener('touchmove',touchMove,false);
+	window.addEventListener('touchend',touchEnd,false);
+
+}
+
+
+function resize()
+{
+
+
+
+}
+
+function touchStart(event)
+{
+//alert("start");
+startx=event.changedTouches[0].pageX;
+event.preventDefault();
+}
+
+function touchMove(event)
+{
+newx=event.changedTouches[0].pageX-startx;
+holder.style.left=(parseInt(holder.style.left)+newx)+'px';
+event.preventDefault();
+}
+
+function touchEnd(event)
+{
+//alert("end");
+event.preventDefault();
+}
+
+
+
+// usage:
+// instead of setInterval(render, 16) ....
+/*
+(function animloop(){
+  requestAnimFrame(animloop);
+  render();
+})();
+*/
+
+function get(name)
+{
+	return document.getElementById(name);
+}
+
+
+function set()
+	{
+		w=width/(2*count);
+		console.log("width : "+width);
+		console.log("object width : "+w);
+		for(i=0;i<count;i++)
+		{
+			images[i].width=w;
+			images[i].height=w;
+			images[i].style.left=(0.5+i*2)*w+'px';
+			t=Math.round(Math.random()*8);
+			images[i].style.top=(0-(t+1)*w)+'px';
+			images[i].style.display='block';
+			game.appendChild(images[i]);
+			console.log("images["+i+"] : "+images[i].style.left+" , "+images[i].style.top);
+		}
+		holder.width=w*1.25;
+		holder.height=w*1.25;
+		
+		holder.style.left=(width-holder.width)/2+'px';
+		holder.style.top=(height-holder.height)+'px';
+		holder.style.display='block';
+		game.appendChild(holder);
+		gamify();
+}
+
+
+function gamify()
+	{
+		for(i=0;i<count;i++)
+		{
+			y=parseInt(images[i].style.top);
+			x=parseInt(images[i].style.left);
+			images[i].style.top=(y+5)+'px';
+			y+=5;
+			if((y+w)>height)
+			{
+				t=Math.round(Math.random()*8);
+				images[i].style.top=(0-(t+1)*w)+'px';
+			}
+			else if(((y+w)>parseInt(holder.style.top)) && (((x<(parseInt(holder.style.left)+holder.width)) && ((x+w)>(parseInt(holder.style.left)+holder.width))) || ((x<parseInt(holder.style.left)) && ((x+w)>(parseInt(holder.style.left))))))
+			{
+				points+=10;
+				console.log(points);
+				t=Math.round(Math.random()*8);
+				images[i].style.top=(0-(t+1)*w)+'px';
+			}
+
+		}
+	setTimeout(gamify,10);
+}
+
+
+</script>
+
+
+
+</head>
+
+
+<body>
+
+<div id="game" class="game">
+
+<div id="background" class="background">
+</div>
+
+<div id="score" class="score">
+</div>
+
+</div>
+
+</body>
+
+</html>	

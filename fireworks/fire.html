@@ -1,0 +1,92 @@
+<html>
+
+
+<head>
+
+
+<script>
+var values;
+var ajaxCon;
+var response;
+
+window.onload=function()
+{
+values=document.getElementById('values');
+
+try
+{
+ajaxCon = new XMLHttpRequest();
+}
+catch (e)
+{
+try
+{
+ajaxCon = new ActiveXObject("Msxml2.XMLHTTP");
+}
+catch (e)
+{
+try
+{
+ajaxCon = new ActiveXObject("Microsoft.XMLHTTP");
+}
+catch (e)
+{
+alert("Update your Browser");
+return false;
+}
+}
+}
+
+
+ajaxCon.open("GET","ajax.php",true);
+ajaxCon.send(null);
+
+ajaxCon.onreadystatechange=function()
+{
+if(ajaxCon.readyState==4)
+{
+response=ajaxCon.responseText.split(',');
+setTimeout('cracker();',parseInt(response[1]));
+}
+}
+
+
+
+}
+
+
+
+function cracker()
+{
+values.innerHTML='started';
+setTimeout('crack();',15000);
+}
+
+
+function crack()
+{
+values.innerHTML='ended';
+}
+
+
+
+
+
+</script>
+
+
+</head>
+
+
+
+<body>
+
+<div id="values">
+stationary
+</div>
+
+
+
+</body>
+
+</html>

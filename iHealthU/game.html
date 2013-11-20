@@ -1,0 +1,424 @@
+<html>
+
+<head>
+
+<style>
+
+#game
+{
+overflow : hidden;
+}
+
+#score
+{
+font-weight:bold;
+}
+</style>
+
+<script>
+//http://bit.ly/1bVMSEU
+
+var bg,player,apple,pizza,banana,samosa,score,start,second,finish;
+var width,height;
+var bgs = new Array();
+var food = new Array();
+var startt,endt,starty,endy;
+var curpos=0;
+var d;
+var sc=0;
+var plus,minus;
+var timing={};
+var curFood=new Array();
+var foodPos=new Array();
+
+window.onload=function()
+{
+start=document.getElementById('start1');
+second=document.getElementById('second1');
+finish=document.getElementById('final1');
+width=window.innerWidth;
+height=window.innerHeight;
+
+start.width=width;
+start.height=(width*2)/3;
+if(width<height)
+start.style.top=((height-start.height)/2)+'px';
+else
+start.style.top=0+'px';
+window.setTimeout('second1()',3000);
+}
+
+function second1()
+{
+start.style.display='none';
+second.width=width;
+second.height=(width*2)/3;
+second.style.top=((height-second.height)/2)+'px';
+second.style.display='block';
+
+second.addEventListener("click",middle,false);
+
+//setTimeout('middle()',1000);
+}
+
+function quit()
+{
+
+finish.width=width;
+finish.height=(width*2)/3;
+if(width>height)
+finish.style.top=0+'px';
+else
+finish.style.top=((height-finish.height)/2)+'px';
+finish.style.display='block';
+window.clearTimeout(timing);
+}
+
+
+function opener()
+{
+location.href="www.ihealthu.com";
+}
+
+
+function middle()
+{
+	window.setTimeout('quit()',30000);
+	second.style.display='none';
+	bg=document.getElementById('bg');
+	player=document.getElementById('player');
+	apple=document.getElementById('apple');
+	food[0]=apple;
+	banana=document.getElementById('banana');
+	food[1]=banana;
+	pizza=document.getElementById('pizza');
+	food[2]=pizza;
+	samosa=document.getElementById('samosa');
+	food[3]=samosa;
+	plus=document.getElementById('plus');
+	minus=document.getElementById('minus');
+	score=document.getElementById('score');
+
+
+	for(var i=0;i<4;i++)
+	{
+		food[i].height=bg.height/10;
+		//alert(food[i].height+" "+(bg.height/6));
+	}
+
+
+
+	width=window.innerWidth;
+	height=window.innerHeight;
+
+	bg.width=width;
+	bg.height=(width*2)/3;
+	player.height=bg.height/3;
+
+	bg.style.top=(height-bg.height)/2+'px';
+	player.style.top=((height-bg.height)/2+bg.height/2)+'px';
+	player.style.display='block';
+	
+
+	game.addEventListener('touchstart mousedown',touchStart,false);
+	game.addEventListener('touchmove mousemove',touchMove,false);
+	game.addEventListener('touchend mouseup',touchEnd,false);
+
+	creator();
+	gamify();
+
+
+}
+
+
+
+function creator()
+{
+
+	for(var i=0;i<3;i++)
+	{
+		bgs[i]=bg.cloneNode(true);
+		bgs[i].style.display='block';
+		bg.parentNode.appendChild(bgs[i]);
+	}
+	bgs[0].style.left=0+'px';
+	bgs[1].style.left=(width)+'px';
+	bgs[2].style.left=(width*2)+'px';
+	plus.height=bgs[0].height*0.2;
+	minus.height=plus.height;
+	
+	
+	score.style.top=0+'px';
+	score.style.left=(bgs[0].width*0.9)+'px';
+
+
+	for(var i=0;i<2;i++)
+	{
+		if(i==0)
+		{
+			curFood[0]=Math.floor(Math.random()*4);
+			curFood[0]=curFood[0]==4?3:curFood[0];
+			foodPos[0]=Math.floor(Math.random()*3);
+			foodPos[0]=foodPos[0]==3?2:foodPos[0];
+			food[curFood[0]].style.left=width+'px';
+			food[curFood[0]].style.top=(parseInt(bgs[0].style.top)+bgs[0].height*0.70-bgs[0].height*0.2*foodPos[0])+'px';
+			food[curFood[0]].style.display='block';
+		}
+		else
+		{
+			curFood[i]=Math.floor(Math.random()*4);
+			curFood[i]=curFood[i]==4?3:curFood[i];
+			if(curFood[i]==curFood[0])
+			{
+				if(curFood[i]<3)
+				{
+					++curFood[i];
+				}
+				else
+				{
+					--curFood[i];
+				}
+			}
+			foodPos[i]=Math.floor(Math.random()*3);
+			foodPos[i]=foodPos[i]==3?2:foodPos[i];
+			food[curFood[i]].style.left=(width*1.5)+'px';
+			food[curFood[i]].style.top=(parseInt(bgs[0].style.top)+bgs[0].height*0.70-bgs[0].height*0.2*foodPos[i])+'px';
+			food[curFood[i]].style.display='block';
+		}
+
+	}
+
+}
+
+
+
+
+function touchStart(event)
+{
+	d=new Date()
+	startt=d.getTime();
+	starty=event.changedTouches[0].pageY;
+	event.preventDefault();
+
+	//alert("down");
+}
+
+
+
+function touchMove(event)
+{
+	event.preventDefault();
+}
+
+
+
+function touchEnd(event)
+{
+	d=new Date;
+	endt=d.getTime();
+	endy=event.changedTouches[0].pageY;
+	//alert(endt+" "+endy+" "+startt+" "+starty);
+
+	if((endt-startt)<400)
+	{
+		if((endy-starty)>50)
+		{
+			if(curpos!=0)
+			{
+				--curpos;
+				player.style.top=(parseInt(player.style.top)+bg.height*0.15)+'px';
+			}
+		}
+		else if((starty-endy)>50)
+		{
+			if(curpos!=2)
+			{
+				++curpos;
+				player.style.top=(parseInt(player.style.top)-bg.height*0.15)+'px';
+			}
+		}
+	}
+
+
+	event.preventDefault();
+	//alert("up");
+}
+
+
+
+
+
+function gamify()
+{
+
+	for(var i=0;i<3;i++)
+	{
+	if((parseInt(bgs[i].style.left)+width)>0)
+		bgs[i].style.left=(parseInt(bgs[i].style.left)-5)+'px';
+	else
+		bgs[i].style.left=(width*2-25)+'px';
+	}
+	for(var i=0;i<2;i++)
+	{
+		if(curpos==foodPos[i] && (player.width>parseInt(food[curFood[i]].style.left)))
+		{
+			food[curFood[i]].style.display='none';
+			food[curFood[i]].style.left=(width*2)+'px';
+			
+			if(curFood[i]<2)
+			{
+				plus.style.display='block';
+				plus.style.left=player.width+'px';
+				plus.style.top=parseInt(food[curFood[i]].style.top)+'px';
+				setTimeout('remove(plus)',500);
+				sc+=10;
+				score.innerHTML="SCORE : "+sc;
+			}
+			else
+			{
+				minus.style.display='block';
+				minus.style.left=player.width+'px';
+				minus.style.top=parseInt(food[curFood[i]].style.top)+'px';
+				setTimeout('remove(minus)',500);
+				sc-=10;
+				score.innerHTML="SCORE : "+sc;
+			}
+                        render(1,i);
+		}
+		else if(parseInt(food[curFood[i]].style.left)<0)
+		{
+			food[curFood[i]].style.display='none';
+			food[curFood[i]].style.left=(width*2)+'px';
+			render(0,i);
+		}
+		else
+		food[curFood[i]].style.left=(parseInt(food[curFood[i]].style.left)-5)+'px';
+	}
+
+	timing=window.setTimeout('gamify();',10);
+}
+
+
+
+
+function remove(obj)
+{
+obj.style.display='none';
+}
+
+
+
+function render(r,val)
+{
+        var vall=val==0?1:0;
+	if(r==0)
+	{
+		curFood[val]=Math.floor(Math.random()*4);
+		curFood[val]=curFood[0]==4?3:curFood[0];
+		if(curFood[val]==curFood[vall])
+		{
+			if(curFood[val]<3)
+			++curFood[val];
+			else
+			--curFood[val];
+		}
+		food[curFood[val]].style.left=width+'px';
+		foodPos[val]=Math.floor(Math.random()*3);
+		foodPos[val]=foodPos[0]==3?2:foodPos[val];
+		food[curFood[val]].style.left=(width*1.5)+'px';
+		food[curFood[val]].style.top=(parseInt(bgs[0].style.top)+bgs[0].height*0.70-bgs[0].height*0.2*foodPos[val])+'px';
+		food[curFood[val]].style.display='block';
+	}
+	else if(r==1)
+	{
+		curFood[val]=Math.floor(Math.random()*4);
+		curFood[val]=curFood[0]==4?3:curFood[val];
+		if(curFood[val]==curFood[vall])
+		{
+			if(curFood[val]<3)
+			++curFood[val];
+			else
+			--curFood[val];
+		}
+		food[curFood[val]].style.left=(width+player.width)+'px';
+		foodPos[val]=Math.floor(Math.random()*3);
+		foodPos[val]=foodPos[0]==3?2:foodPos[val];
+		food[curFood[val]].style.left=(width*1.5)+'px';
+		food[curFood[val]].style.top=(parseInt(bgs[0].style.top)+bgs[0].height*0.70-bgs[0].height*0.2*foodPos[val])+'px';
+		food[curFood[val]].style.display='block';
+	}
+}
+
+/*
+<a href="http://www.ihealthu.com" onClick="return confirm('Do you want to leave')" class="external" target="_blank">
+<img src="7_1.png" id="final1" style="position:absolute; top:0; left:0; display:none"/>
+</a>
+*/
+
+</script>
+
+</head>
+
+
+
+<body>
+
+<div id="game" style="position:absolute; left:0; top:0; width:100%; height:100%">
+
+<div>
+<img src="bg.png" id="bg" style="top:0; left:0; position:absolute; display:none"></img>
+</div>
+
+<div>
+<img src="apple.png" id="apple" style="position:absolute; display:none"></img>
+</div>
+
+<div>
+<img src="pizza.png" id="pizza" style="position:absolute; display:none"></img>
+</div>
+
+<div>
+<img src="banana.png" id="banana" style="position:absolute; display:none"></img>
+</div>
+
+<div>
+<img src="samosa.png" id="samosa" style="position:absolute; display:none"></img>
+</div>
+
+<div>
+<img src="minuspoints.png" id="minus" style="position:absolute; display:none"></img>
+</div>
+
+<div>
+<img src="pluspoints.png" id="plus" style="position:absolute; display:none"></img>
+</div>
+
+<div>
+<img src="rider.png" id="player" style="top:0; left:0; position:absolute; display:none"></img>
+</div>
+
+</div>
+
+<div id="score" style="position:absolute; left:0; top:0">
+</div>
+
+<div id="first">
+<img src="1_1.png" id="start1" style="position:absolute; left:0; top:0">
+</img>
+</div>
+
+<div id="second">
+<img src="3_1.png" id="second1" style="position:absolute; left:0; top:0; display:none" onclick="middle();">
+</img>
+</div>
+
+<div id="final">
+<a href="http://www.ihealthu.com" onClick="return confirm('Do you want to leave')" class="external" target="_blank">
+<img src="7_1.png" id="final1" style="position:absolute; top:0; left:0; display:none"/>
+</a>
+</div>
+
+</body>
+
+
+</html>

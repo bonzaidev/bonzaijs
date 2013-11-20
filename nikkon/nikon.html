@@ -1,0 +1,121 @@
+<html>
+
+<head>
+
+<style>
+
+
+</style>
+
+<script>
+var imgs=new Array();
+var upd;
+var cur=0;
+var y,z,val;
+
+window.onload=load;
+
+function load()
+{
+imgs[0]=document.getElementById('front');
+imgs[1]=document.getElementById('left');
+imgs[2]=document.getElementById('back');
+imgs[3]=document.getElementById('right');
+
+upd=document.getElementById('update');
+
+window.addEventListener('devicemotion',motion,false);
+window.onresize=resize;
+}
+
+
+function resize()
+{
+
+}
+
+function motion(event)
+{
+y=event.rotationRate.beta;
+z=event.rotationRate.gamma;
+val=y+z;
+
+if(Math.abs(val)>90)
+{
+if(val<0)
+{
+img[cur].style.display='none';
+
+if(cur==3)
+cur=0;
+else
+++cur;
+
+img[cur].style.display='block';
+upd.innerHTML="You Turned Right";
+}
+else
+{
+img[cur].style.display='none';
+
+if(cur==0)
+cur=3;
+else
+--cur;
+
+img[cur].style.display='block';
+upd.innerHTML="You Turned Left";
+}
+}
+
+/*
+else if(Math.abs(y)>90)
+{
+if(y<0)
+{
+
+}
+else
+{
+
+}
+}
+*/
+
+}
+
+
+
+</script>
+
+
+</head>
+
+
+<body>
+
+
+<div id="images">
+<img src="0.jpg" id="front" style="left:0; top:0; position: absolute; display:block"></img>
+<img src="1.jpg" id="left" style="left:0; top:0; position: absolute; display:none"></img>
+<img src="2.jpg" id="back" style="left:0; top:0; position: absolute; display:none"></img>
+<img src="3.jpg" id="right" style="left:0; top:0; position: absolute; display:none"></img>
+</div>
+
+<div id="update">
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,349 @@
+
+<html>
+
+
+<head>
+
+<style>
+
+#bg1
+{
+color: #ff7777;
+}
+
+
+
+
+</style>
+
+<script>
+/*
+<div id="bg2" style="position:absolute; top:100"></div>
+
+<img src="slider2.png" id="slider2" style="position:absolute; top:100"></img>
+
+<img src="marker2.png" id="marker2" style="position:absolute; top:100"></img>
+
+<div id="bg3" style="position:absolute; top:200; background-color: orange"></div>
+
+<img src="slider3.png" id="slider3" style="position:absolute; top:200"></img>
+
+<img src="marker3.png" id="marker3" style="position:absolute; top:200"></img>
+*/
+//E = P×r×(1 + r)n/((1 + r)n - 1)
+var bgs,inputs,sliders,markers;
+var i,j,k;
+var ip,slider,marker;
+var x,y,z
+var val,ans;
+var divi,first;
+var ob;
+var temp;
+var c;
+var p,n,r;
+var range=[0,2000000,20,30];
+var increments=[0,1000,1,1];
+var initials=[0,1000,1,1];
+var answer=0;
+
+var ops=0
+
+window.onload=function()
+{
+
+bgs="bg";
+sliders=new Array();
+markers=new Array();
+inputs=new Array();
+bg=document.getElementById(bgs);
+ans=document.getElementById('answer');
+
+for(i=1;i<4;i++)
+{
+slider='slider'+i;
+marker='marker'+i;
+ip='value'+i;
+
+sliders[i]=document.getElementById(slider);
+markers[i]=document.getElementById(marker);
+inputs[i]=document.getElementById(ip);
+inputs[i].value=initials[i];
+
+/*
+bg.addEventListener('mousedown',Start);
+bg.addEventListener('mousemove',move);
+bg.addEventListener('mouseup',End);
+sliders[i].addEventListener('mousedown',Start);
+sliders[i].addEventListener('mousemove',move);
+sliders[i].addEventListener('mouseup',End);
+markers[i].addEventListener('mousedown',Start);
+markers[i].addEventListener('mousemove',move);
+markers[i].addEventListener('mouseup',End);
+*/
+
+/*
+bg.addEventListener('touchstart',Start);
+bg.addEventListener('touchmove',move);
+bg.addEventListener('touchend',End);
+*/
+sliders[i].addEventListener('touchstart',Start);
+sliders[i].addEventListener('touchmove',move);
+sliders[i].addEventListener('touchend',End);
+markers[i].addEventListener('touchstart',Start);
+markers[i].addEventListener('touchmove',move);
+markers[i].addEventListener('touchend',End);
+
+
+}
+/*
+bg.style.top=slider.style.top;
+bg.width=slider.width;
+bg.height=slider.height;
+
+
+console.log(bg.style.top);
+console.log(bg.width);
+console.log(bg.height);
+*/
+
+
+divi=sliders[1].width*0.97-sliders[1].width*0.05;
+first=sliders[1].width*0.05;
+ans.value='84';
+}
+
+
+function Start(x)
+{
+ops=1;
+
+x.preventDefault();
+ob=x.changedTouches[0];
+//ob=x;
+//console.log("start "+x.target.id);
+
+
+
+}
+
+
+
+function move(y)
+{
+
+y.preventDefault();
+
+ob=y.changedTouches[0];
+//ob=y;
+
+c=parseInt((y.target.id).charAt(6));
+//console.log("move "+y.target.id);
+
+if(ops==1)
+{
+//console.log(ob.clientX+" "+sliders[c]+" "+c);
+if(ob.clientX<=sliders[c].width*0.97 && ob.clientX>=sliders[c].width*0.05)
+{
+markers[c].style.left=ob.clientX+'px';
+
+if(c==1)
+inputs[c].value=''+Math.round(((ob.clientX-first)/(divi))*2000000);
+else if(c==2)
+inputs[c].value=''+Math.round(((ob.clientX-first)/(divi))*19+1);
+else if(c==3)
+inputs[c].value=''+Math.round(((ob.clientX-first)/(divi))*29+1);
+
+//ans.value=''+(Math.round(parseInt(inputs[c].value))*365);
+//E = P×r×(1 + r)n/((1 + r)n - 1)
+p=parseInt(inputs[1].value);
+r=parseInt(inputs[2].value)/1200;
+n=parseInt(inputs[3].value)*12;
+answer = p*r*(Math.pow((1+r),n))/(Math.pow((1+r),n)-1);
+answer=Math.round(answer);
+ans.value=''+answer;
+console.log(answer+' '+p+' '+r+' '+n);
+}
+
+
+}
+
+
+
+
+
+}
+
+
+function End(z)
+{
+
+
+z.preventDefault();
+ob=z.changedTouches[0];
+//ob=z;
+//console.log("end "+z.target.id);
+ops=0;
+
+}
+
+
+
+
+
+
+function update()
+{
+//marker.style.left=Math.round((parseInt(ans.value)*divi)/100+first)+'px';
+//console.log(Math.round((parseInt(val.value)*divi)/100+first));
+ans.value=''+(Math.round(parseInt(val.value))*365);
+}
+
+
+
+
+
+
+
+
+
+function isNumber(evt)
+{
+evt=(evt)?evt:window.event;
+c=parseInt((evt.target.id).charAt(5));
+
+var charCode=evt.keyCode;
+
+if(evt.keyCode==8)
+{
+if(inputs[c].value!='')
+{
+temp=Math.floor(parseInt(inputs[c].value)/10);
+
+markers[c].style.left=Math.round((temp*divi)/range[c]+first)+'px';
+
+p=parseInt(inputs[1].value);
+r=parseInt(inputs[2].value)/1200;
+n=parseInt(inputs[3].value)*12;
+
+if(c==1)
+p=Math.floor(parseInt(inputs[c].value)/10);
+else if(c==2)
+r=(Math.floor(parseInt(inputs[c].value)/10))/1200;
+else if(c==3)
+n=(Math.floor(parseInt(inputs[c].value)/10))*12;
+console.log(p+' '+r+' '+n+' '+(Math.pow((1+r),n))+' '+1/(1-1));
+if(p==0 || r==0 || n==0)
+answer=0;
+else
+answer = p*r*(Math.pow((1+r),n))/(Math.pow((1+r),n)-1);
+answer=Math.round(answer);
+ans.value=''+answer;
+}
+}
+
+
+else
+{
+if ((charCode<48 || charCode>57))
+{
+return false;
+}
+if(inputs[c].value=='')
+{
+console.log("yes");
+
+temp=parseInt(charCode)-48;
+
+markers[c].style.left=Math.round((temp*divi)/100+first)+'px';
+
+p=parseInt(inputs[1].value);
+r=parseInt(inputs[2].value)/1200;
+n=parseInt(inputs[3].value)*12;
+
+
+if(c==1)
+p=(parseInt(charCode)-48);
+else if(c==2)
+r=(parseInt(charCode)-48)/1200;
+else if(c==3)
+n=(parseInt(charCode)-48)*12;
+
+if(p==0 || n==0 || r==0)
+answer=0;
+else
+answer = p*r*(Math.pow((1+r),n))/(Math.pow((1+r),n)-1);
+answer=Math.round(answer);
+ans.value=''+answer;
+}
+else if(parseInt(inputs[c].value)<(range[c]/10) || (parseInt(inputs[c].value)==(range[c]/10) && charCode==48))
+{
+temp=parseInt(charCode)-48;
+temp+=parseInt(inputs[c].value)*10;
+markers[c].style.left=Math.round((temp*divi)/range[c]+first)+'px';
+console.log(range[c]);
+
+p=parseInt(inputs[1].value);
+r=parseInt(inputs[2].value)/1200;
+n=parseInt(inputs[3].value)*12;
+
+if(c==1)
+p=parseInt(inputs[c].value)*10+(parseInt(charCode)-48);
+else if(c==2)
+r=(parseInt(inputs[c].value)*10+(parseInt(charCode)-48))/1200;
+else if(c==3)
+n=(parseInt(inputs[c].value)*10+(parseInt(charCode)-48))*12;
+
+if(p==0 || r==0 || n==0)
+answer=0;
+else
+answer = p*r*(Math.pow((1+r),n))/(Math.pow((1+r),n)-1);
+answer=Math.round(answer);
+ans.value=''+answer;
+}
+else
+{
+evt.preventDefault();
+}
+}
+
+
+return true;
+}
+
+
+</script>
+
+
+
+</head>
+
+
+
+<body>
+
+<div id="bg" style="position:absolute; top:0"></div>
+
+<img src="slider1.png" id="slider1" style="position:absolute; top:0"></img>
+
+<img src="marker1.png" id="marker1" style="position:absolute; top:0"></img>
+
+<input type="text" id="value1" style="position:absolute; left:400" onkeydown="return isNumber(event)"/>
+
+<img src="slider1.png" id="slider2" style="position:absolute; top:100"></img>
+
+<img src="marker1.png" id="marker2" style="position:absolute; top:100"></img>
+
+<input type="text" id="value2" style="position:absolute; left:400; top:100" onkeydown="return isNumber(event)"/>
+
+<img src="slider1.png" id="slider3" style="position:absolute; top:200"></img>
+
+<img src="marker1.png" id="marker3" style="position:absolute; top:200"></img>
+
+<input type="text" id="value3" style="position:absolute; top:200; left: 400" onkeydown="return isNumber(event)"/>
+
+<input type="text" id="answer" style="position:absolute; top: 300"/>
+
+</body>
+
+
+</html>

@@ -1,0 +1,168 @@
+<html>
+
+<head>
+
+<style>
+</style>
+
+<script>
+var continental,indian,thai;
+var ajaxUpdate;
+var ajaxRefresh;
+
+window.onload=function()
+{
+continental=document.getElementById('cbutton');
+indian=document.getElementById('ibutton');
+thai=document.getElementById('tbutton');
+
+
+
+try
+{
+// Opera 8.0+, Firefox, Safari
+ajaxUpdate = new XMLHttpRequest();
+}
+catch (e)
+{
+// Internet Explorer Browsers
+try
+{
+ajaxUpdate = new ActiveXObject("Msxml2.XMLHTTP");
+}
+catch (e)
+{
+try
+{
+ajaxUpdate = new ActiveXObject("Microsoft.XMLHTTP");
+}
+catch (e)
+{
+alert("Update your Browser");
+return false;
+}
+}
+}
+
+
+try
+{
+// Opera 8.0+, Firefox, Safari
+ajaxRefresh = new XMLHttpRequest();
+}
+catch (e)
+{
+// Internet Explorer Browsers
+try
+{
+ajaxRefresh = new ActiveXObject("Msxml2.XMLHTTP");
+}
+catch (e)
+{
+try
+{
+ajaxRefresh = new ActiveXObject("Microsoft.XMLHTTP");
+}
+catch (e)
+{
+alert("Update your Browser");
+return false;
+}
+}
+}
+
+refresh();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+function update(val)
+{
+
+var queryString = "?value=" + val ;
+
+ajaxUpdate.open("GET", "update.php" + queryString, true);
+ajaxUpdate.send(null);
+
+}
+
+
+
+
+
+
+
+
+
+function refresh()
+{
+
+ajaxRefresh.open("GET", "refresh.php", true);
+ajaxRefresh.send(null);
+
+ajaxRefresh.onreadystatechange = function()
+{
+if(ajaxRefresh.readyState == 4)
+{
+
+var resp=ajaxRefresh.responseText.split(',');
+
+document.getElementById('continental').innerHTML = resp[0];
+document.getElementById('indian').innerHTML = resp[1];
+document.getElementById('thai').innerHTML = resp[2];
+setTimeout('refresh()',10);
+
+}
+}
+
+}
+
+
+
+
+
+
+</script>
+
+
+
+
+</head>
+
+
+<body>
+
+<button id="cbutton" onclick="update(1);">continental</button>
+<div id="continental">
+</div>
+
+<br>
+<br>
+<br>
+
+<button id="ibutton" onclick="update(2);">indian</button>
+<div id="indian">
+</div>
+
+<br>
+<br>
+<br>
+
+<button id="tbutton" onclick="update(3);">thai</button>
+<div id="thai">
+</div>
+
+
+
+</body>
+
+</html>

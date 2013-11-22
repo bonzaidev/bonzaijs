@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+<style>
+
+</style>
+
+
+<script>
+
+          var jsonObject = {
+				"coordinates": [
+				{"latitude":"51.803494","longitude":"19.364540"},
+				{"latitude":"50.053003","longitude":"20.036536"},
+				{"latitude":"53.762700","longitude":"20.499725"}, 
+				{"latitude":"49.835316","longitude":"19.041816"},
+				{"latitude":"53.097212","longitude":"18.009227"},
+			    ],
+				"city": [
+				{"name":"Lodz"},
+				{"name":"Krakow"},
+				{"name":"Olsztyn"},
+				{"name":"Bielsko-Biala"},
+				{"name":"Bydgoszcz"},
+				],
+                          };
+
+var start;
+var close=0;
+var distance=[0,0,0,0,0];
+//Bydgoszcz 53.097212  18.009227
+				function getLocation()
+						{
+							if(navigator.geolocation)
+							{
+								navigator.geolocation.getCurrentPosition(showPosition);
+								navigator.geolocation.watchPosition(updatePosition);
+							}
+							else
+							{
+							document.getElementById('update').innerHTML="GeoLocation Is Not Supported";
+							}
+						};
+						
+						
+						
+						function calculate(lat1, lon1, lat2, lon2) 
+						{
+							var R = 6371; // km
+							var dLat = toRad(lat2-lat1);
+							var dLon = toRad(lon2-lon1);
+							var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+							Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+							Math.sin(dLon/2) * Math.sin(dLon/2);
+							var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+							var d = R * c;
+							return d;
+						}
+      
+	  
+						function toRad(vall)
+						{
+							return vall * Math.PI / 180;
+						}
+
+						
+						
+						function showPosition(position)
+						{
+						console.log("o");
+									for( var i=0;i<5;i++)
+									{
+										distance[i]=calculate(position.coords.latitude,position.coords.longitude,jsonObject.coordinates[i].latitude,jsonObject.coordinates[i].longitude);
+										if(distance[i]<distance[close])
+										close=i;
+									}
+									document.getElementById('update').innerHTML="Your Current Location Is <br>";
+									document.getElementById('update').innerHTML+="Latitude : "+position.coords.latitude+"<br>";
+									document.getElementById('update').innerHTML+="Longitude : "+position.coords.longitude+"<br><br><br>";
+									document.getElementById('update').innerHTML+="Closest BMW Showroom Is "+jsonObject.city[close].name+"<br>";
+									document.getElementById('update').innerHTML+="Latitude Of Showroom : "+jsonObject.coordinates[close].latitude+"<br>";
+									document.getElementById('update').innerHTML+="Longitude Of Showroom : "+jsonObject.coordinates[close].longitude+"<br>";
+                                                                        document.getElementById('update').innerHTML+="Showroom Is "+distance[close]+" kms Away From You"+"<br>";
+						}
+						
+						
+						function updatePosition(position)
+						{
+						console.log("o");
+									for( var i=0;i<5;i++)
+									{
+										distance[i]=calculate(position.coords.latitude,position.coords.longitude,jsonObject.coordinates[i].latitude,jsonObject.coordinates[i].longitude);
+										if(distance[i]<distance[close])
+										close=i;
+									}
+									document.getElementById('update').innerHTML="Your Current Location Is <br>";
+									document.getElementById('update').innerHTML+="Latitude : "+position.coords.latitude+"<br>";
+									document.getElementById('update').innerHTML+="Longitude : "+position.coords.longitude+"<br><br><br>";
+									document.getElementById('update').innerHTML+="Closest BMW Showroom Is "+jsonObject.city[close].name+"<br>";
+									document.getElementById('update').innerHTML+="Latitude Of Showroom : "+jsonObject.coordinates[close].latitude+"<br>";
+									document.getElementById('update').innerHTML+="Longitude Of Showroom : "+jsonObject.coordinates[close].longitude+"<br>";
+                                                                        document.getElementById('update').innerHTML+="Showroom Is "+distance[close]+" kms Away From You"+"<br>";
+						}
+
+
+
+</script>
+
+
+</head>
+
+
+
+
+
+
+
+<body>
+
+<p>Click to check the nearest BMW showroom</p>
+<button id="button" onclick="getLocation();">click</button>
+
+<div id="update"></div>
+
+</body>
+
+
+</html>

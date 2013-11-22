@@ -1,0 +1,188 @@
+<html>
+
+
+<head>
+
+
+<script>
+var values;
+var ajaxCon,ajaxUpdate;
+var response;
+var ms1,ms2,s1,s2;
+var timer;
+var total;
+var gif;
+var width,height;
+var str1,str;
+var play=true;
+var numb;
+
+window.onload=function()
+{
+values=document.getElementById('values');
+
+width=window.innerWidth;
+height=window.innerHeight;
+
+str1=document.URL;
+str=str1.substring((str1.indexOf('?'))+1,str1.length);
+console.log(str);
+
+gif=document.getElementsByTagName('img')[0].cloneNode(true);
+gif.src=document.getElementsByTagName('img')[0].src+'?rnd='+Math.random()+'';
+gif.style.display='block';
+gif.style.left=0+'px';
+gif.style.position='absolute';
+gif.width=width;
+gif.height=(width*480)/640;
+gif.style.top=(height-gif.height)/2+'px';
+
+for(var i=0;i<str.length;i++)
+{
+if(str.charCodeAt(i)<48 || str.charCodeAt(i)>57)
+play=false;
+}
+
+if(play && str.length==10)
+{
+numb=parseInt(str);
+
+
+try
+{
+ajaxCon = new XMLHttpRequest();
+}
+catch (e)
+{
+try
+{
+ajaxCon = new ActiveXObject("Msxml2.XMLHTTP");
+}
+catch (e)
+{
+try
+{
+ajaxCon = new ActiveXObject("Microsoft.XMLHTTP");
+}
+catch (e)
+{
+alert("Update your Browser");
+return false;
+}
+}
+}
+
+console.log("calling loopAnimAjax");
+ajaxCon.open("GET","loopAnimAjax.php?number="+str,true);
+ajaxCon.send(null);
+console.log("called loopAnimAjax");
+
+ajaxCon.onreadystatechange=function()
+{
+if(ajaxCon.readyState==4)
+{
+console.log("ready state");
+
+response=ajaxCon.responseText.split(',');
+console.log(response[0]+" "+response[1]+" "+response[2]+" "+response[3]+" "+response[4]);
+
+if(parseInt(response[0])>0)
+{
+console.log("perfect");
+console.log(response[0]+" "+response[1]+" "+response[2]+" "+response[3]+" "+response[4]);
+timer=(((parseInt(response[0])-1)*14000)-(((parseInt(response[4])*1000)+(parseFloat(response[3])*1000))-((parseInt(response[2])*1000)+(parseFloat(response[1])*1000))));
+total=parseInt(response[0]);
+
+if(timer>=0)
+{
+setTimeout('cracker();',timer);
+console.log("calling cracker");
+}
+else
+{
+document.getElementById('img').innerHTML='Sorry The Loop Has Already Finished Playing For Phone Number '+str;
+console.log("loop finished");
+}
+
+}
+else if(parseInt(response[0])==-2)
+{
+document.getElementById('img').innerHTML='Sorry Gang Is Already Full For Phone Number '+str;
+}
+else if(parseInt(response[0])==-1)
+{
+document.getElementById('img').innerHTML='Sorry Gang Is Not Yet Created For Phone Number '+str;
+}
+}
+}
+
+}
+
+window.onresize=resize;
+
+}
+
+
+function resize()
+{
+width=window.innerWidth;
+height=window.innerHeight;
+
+gif.style.left=0+'px';
+gif.width=width;
+gif.height=(width*480)/640;
+gif.style.top=(height-gif.height)/2+'px';
+
+
+}
+
+
+
+
+
+
+function cracker()
+{
+//values.innerHTML='started';
+document.getElementById('img').appendChild(gif);
+setTimeout('crack();',15000);
+}
+
+
+function crack()
+{
+gif.parentNode.removeChild(gif);
+//values.innerHTML='ended';
+var queryString = "?total=" + total + "&number=" + numb;
+console.log("ended");
+/*
+ajaxCon.open("GET", "loopAjaxend.php" + queryString, true);
+ajaxCon.send(null);
+*/
+}
+
+
+
+
+
+</script>
+
+
+</head>
+
+
+
+<body>
+
+<div id="values" style="left:0; top:0; position:absolute">
+
+</div>
+
+<div id="img" width=100% height=100%>
+</div>
+
+<img src="car-anim.gif" style="display:none; left:0; top:0; position:absolute"></img>
+
+</body>
+
+</html>

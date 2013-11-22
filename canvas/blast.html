@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+<style>
+          body {
+             margin: 0px;
+             padding: 0px;
+            }
+
+            #container {
+        background-color: #000;
+        display: inline-block;
+        width: 580px;
+        height: 500px;
+      }
+      #buttons {
+        position: absolute;
+        top: 60px;
+        left: 100px;
+      }
+      #buttons > input {
+        padding: 10px;
+        display: block;
+        margin-top: 5px;
+      }
+      canvas {
+        border: 1px solid;
+      }
+    </style>
+
+  </head>
+  <body bgcolor="#000000">
+<div id="container"> </div>
+    <div id="buttons">
+      <input type="button" id="blast" value="blast">
+      </div>
+  
+    <script src="scripts/kinetic.js"></script>
+    <script>
+      var stage = new Kinetic.Stage({
+        container: 'container',
+        width: 578,
+        height: 500
+      });
+      var layer = new Kinetic.Layer();
+      var animations = {
+        blast: [{
+          x: 255,
+          y: 375,
+          width: 90,
+          height: 90
+        }, {
+          x: 15,
+          y: 15,
+          width: 90,
+          height: 90
+        }, {
+          x: 135,
+          y: 15,
+          width: 90,
+          height: 90
+        }, {
+          x: 255,
+          y: 15,
+          width: 90,
+          height: 90
+        }, {
+          x: 15,
+          y: 135,
+          width: 90,
+          height: 90
+        }, {
+          x: 135,
+          y: 135,
+          width: 90,
+          height: 90
+        }, {
+          x: 255,
+          y: 135,
+          width: 90,
+          height: 90
+         }, {
+           x: 15,
+           y: 255,
+           width: 90,
+           height: 90
+         }, {
+           x: 135,
+           y: 255,
+           width: 90,
+           height: 90
+         }, {
+            x: 255,
+            y: 255,
+            width: 90,
+            height: 90
+         }, {
+           x: 15,
+           y: 375,
+           width: 90,
+           height: 90
+         }, {
+           x: 135,
+           y: 375,
+           width: 90,
+           height: 90
+         }, {
+           x: 255,
+           y: 375,
+           width: 90,
+           height: 90
+         }
+	]
+      };
+
+
+
+      var imageObj = new Image();
+      imageObj.onload = function()
+     {
+
+
+        var blob = new Kinetic.Sprite({
+          x: 90,
+          y: 40,
+          image: imageObj,
+          animation: 'blast',
+          animations: animations,
+          frameRate: 7,
+        });
+        
+
+        layer.add(blob);
+        stage.add(layer);
+        
+        
+        document.getElementById('blast').addEventListener('click', function() {
+ 
+     blob.start();
+     
+      blob.afterFrame(12, function(){
+document.getElementById('buttons').removeChild(document.getElementById('blast')); 
+
+blob.stop();
+});  
+    
+          }, false);
+
+        };
+           
+      imageObj.src = 'BlueExplosion.jpg';
+    </script>
+   
+  </body>
+</html>

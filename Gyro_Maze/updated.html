@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+div
+{
+margin:0 auto;
+}
+</style>
+
+<head>
+
+<script>
+//global variables
+var width,height,size;
+var i,j,k;
+var maze,ball;
+var ax,ay;
+var posi=0,posj=1;
+var setx=0,sety=1;
+var canvas,context;
+var pix;
+var p1,p2;
+var ms;
+var monster;
+var monsters=new Array(3);
+var directions=new Array(3);
+var monpos=[[0.89654,0.05667],[0.90000,0.57670],[0.16500,0.79000]];
+
+var mapp=[
+		[1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[1,0,1,0,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1],
+		[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+		[1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,0,1],
+		[1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1],
+		[1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1],
+		[1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,0,0,1],
+		[1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,0,1],
+		[1,0,0,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1],
+		[1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+		[1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,1],
+		[1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],
+		[1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1],
+		[1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,0,1],
+		[1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,1],
+		[1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1],
+		[1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,0],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+];
+
+window.onload=function()
+{
+size=512;
+
+maze=document.getElementById('maze');
+ball=document.getElementById('ball');
+monster=document.getElementById('monster');
+monster.style.left=0+'px';
+
+maze.width=size;
+maze.height=size;
+
+canvas=document.getElementById('canvas');
+canvas.width=maze.width;
+canvas.height=maze.height;
+context=canvas.getContext('2d');
+context.drawImage(maze,0,0,maze.width,maze.height);
+
+pix=context.getImageData(0,0,maze.width,maze.height).data;
+
+ball.style.display='block';
+
+ball.width=Math.ceil(maze.width/22);
+ball.height=Math.ceil(maze.height/22);
+monster.width=ball.width*0.88;
+monster.height=ball.height*0.88;
+ball.style.left=(ball.width*1.25)+'px';
+
+for(i=0;i<3;i++)
+{
+monsters[i]=monster.cloneNode(true);
+monsters[i].style.display='block';
+monsters[i].style.left=(size*monpos[i][0])+'px';
+monsters[i].style.top=(size*monpos[i][1])+'px';
+document.getElementById('game').appendChild(monsters[i]);
+}
+
+directions[0]=3;
+directions[1]=0;
+directions[2]=3;
+
+if(window.addEventListener)
+{
+window.addEventListener('devicemotion',motion,false);
+}
+else
+{
+//window.ondevicemotion=motion;
+}
+
+window.onresize=resize;
+gamify();
+}
+
+function resize()
+{
+
+
+
+
+}
+
+
+function motion(event)
+{
+ax=event.accelerationIncludingGravity.x;
+ay=event.accelerationIncludingGravity.y;
+if(Math.abs(ax)>Math.abs(ay))
+{
+setx=ax>0?-1:1;
+sety=0;
+}
+else
+{
+setx=0;
+sety=ay>0?1:-1;
+}
+}
+
+
+
+
+
+function gamify()
+{
+
+if(sety!=0)
+{
+if(sety>0)
+{
+p1=(((parseInt(ball.style.top)+ball.height+3)<<9)+parseInt(ball.style.left)+Math.round(ball.width*0.2))<<2;
+p2=(((parseInt(ball.style.top)+ball.height+3)<<9)+parseInt(ball.style.left)+Math.round(ball.width*0.8))<<2;
+
+if(pix[p1+3]==0 && pix[p2+3]==0)
+ball.style.top=(parseInt(ball.style.top)+3)+'px';
+else if(pix[p1+3]==0 || pix[p2+3]==0)
+{
+if(pix[p1+3]==0)
+{
+ball.style.left=(parseInt(ball.style.left)-ball.width*0.8)+'px';
+ball.style.top=(parseInt(ball.style.top)+3)+'px';
+}
+else if(pix[p2+3]==0)
+{
+ball.style.left=(parseInt(ball.style.left)+ball.width*0.8)+'px';
+ball.style.top=(parseInt(ball.style.top)+3)+'px';
+}
+}
+
+
+}
+else
+{
+p1=(((parseInt(ball.style.top)-3)<<9)+parseInt(ball.style.left)+Math.round(ball.width*0.2))<<2;
+p2=(((parseInt(ball.style.top)-3)<<9)+parseInt(ball.style.left)+Math.round(ball.width*0.8))<<2;
+
+if(pix[p1+3]==0 && pix[p2+3]==0)
+ball.style.top=(parseInt(ball.style.top)-3)+'px';
+else if(pix[p1+3]==0 || pix[p2+3]==0)
+{
+if(pix[p1+3]==0)
+{
+ball.style.left=(parseInt(ball.style.left)-ball.width*0.8)+'px';
+ball.style.top=(parseInt(ball.style.top)-3)+'px';
+}
+else if(pix[p2+3]==0)
+{
+ball.style.left=(parseInt(ball.style.left)+ball.width*0.8)+'px';
+ball.style.top=(parseInt(ball.style.top)-3)+'px';
+}
+}
+
+
+}
+}
+else if(setx!=0)
+{
+if(setx>0)
+{
+p1=(((parseInt(ball.style.top)+Math.round(ball.height*0.2))<<9)+parseInt(ball.style.left)+ball.width+3)<<2;
+p2=(((parseInt(ball.style.top)+Math.round(ball.height*0.8))<<9)+parseInt(ball.style.left)+ball.width+3)<<2;
+
+if(pix[p1+3]==0 && pix[p2+3]==0)
+ball.style.left=(parseInt(ball.style.left)+3)+'px';
+else if(pix[p1+3]==0 || pix[p2+3]==0)
+{
+if(pix[p1+3]==0)
+{
+ball.style.top=(parseInt(ball.style.top)-ball.height*0.8)+'px';
+ball.style.left=(parseInt(ball.style.left)+3)+'px';
+}
+else if(pix[p2+3]==0)
+{
+ball.style.top=(parseInt(ball.style.top)+ball.height*0.8)+'px';
+ball.style.left=(parseInt(ball.style.left)+3)+'px';
+}
+}
+
+
+}
+else if(setx<0)
+{
+p1=(((parseInt(ball.style.top)+Math.round(ball.height*0.2))<<9)+parseInt(ball.style.left)-3)<<2;
+p2=(((parseInt(ball.style.top)+Math.round(ball.height*0.8))<<9)+parseInt(ball.style.left)-3)<<2;
+
+if(pix[p1+3]==0 && pix[p2+3]==0)
+ball.style.left=(parseInt(ball.style.left)-3)+'px';
+else if(pix[p1+3]==0 || pix[p2+3]==0)
+{
+if(pix[p1+3]==0)
+{
+ball.style.top=(parseInt(ball.style.top)-ball.width*0.8)+'px';
+ball.style.left=(parseInt(ball.style.left)-3)+'px';
+}
+else if(pix[p2+3]==0)
+{
+ball.style.top=(parseInt(ball.style.top)+ball.width*0.8)+'px';
+ball.style.left=(parseInt(ball.style.left)-3)+'px';
+}
+}
+
+
+}
+}
+
+
+for(i=0;i<3;i++)
+{
+if(directions[i]==0)
+{
+p1=(((parseInt(monsters[i].style.top)-1)<<9)+parseInt(monsters[i].style.left))<<2;
+p2=(((parseInt(monsters[i].style.top)-1)<<9)+parseInt(monsters[i].style.left)+monster.width)<<2;
+if(pix[p1+3]==0 && pix[p2+3]==0)
+{
+monsters[i].style.top=(parseInt(monsters[i].style.top)-1)+'px';
+}
+else
+{
+directions[i]=Math.floor(Math.random()*4);
+directions[i]=directions[i]==4?3:directions[i];
+}
+}
+else if(directions[i]==1)
+{
+
+p1=(((parseInt(monsters[i].style.top))<<9)+parseInt(monsters[i].style.left)+monster.width+1)<<2;
+
+p2=(((parseInt(monsters[i].style.top)+monster.height)<<9)+parseInt(monsters[i].style.left)+monster.width+1)<<2;
+
+if(pix[p1+3]==0 && pix[p2+3]==0)
+{
+monsters[i].style.left=(parseInt(monsters[i].style.left)+1)+'px';
+}
+else
+{
+directions[i]=Math.floor(Math.random()*4);
+directions[i]=directions[i]==4?3:directions[i];
+}
+
+}
+else if(directions[i]==2)
+{
+
+p1=(((parseInt(monsters[i].style.top)+monster.height+1)<<9)+parseInt(monsters[i].style.left))<<2;
+
+p2=(((parseInt(monsters[i].style.top)+monster.height+1)<<9)+parseInt(monsters[i].style.left)+monster.width)<<2;
+
+if(pix[p1+3]==0 && pix[p2+3]==0)
+{
+monsters[i].style.top=(parseInt(monsters[i].style.top)+1)+'px';
+}
+else
+{
+directions[i]=Math.floor(Math.random()*4);
+directions[i]=directions[i]==4?3:directions[i];
+}
+
+}
+else if(directions[i]==3)
+{
+p1=(((parseInt(monsters[i].style.top))<<9)+parseInt(monsters[i].style.left)-1)<<2;
+
+p2=(((parseInt(monsters[i].style.top)+monster.height)<<9)+parseInt(monsters[i].style.left)+monster.width-1)<<2;
+
+if(pix[p1+3]==0 && pix[p2+3]==0)
+{
+monsters[i].style.left=(parseInt(monsters[i].style.left)-1)+'px';
+}
+else
+{
+directions[i]=Math.floor(Math.random()*4);
+directions[i]=directions[i]==4?3:directions[i];
+}
+}
+
+
+                                 //collision detection
+
+
+if(((parseInt(monsters[i].style.left)>parseInt(ball.style.left)) && (parseInt(monsters[i].style.left)<(parseInt(ball.style.left)+ball.width)) && (parseInt(monsters[i].style.top)>parseInt(ball.style.top)) && (parseInt(monsters[i].style.top)<(parseInt(ball.style.top)+ball.height))) || ((parseInt(monsters[i].style.left)>parseInt(ball.style.left)) && (parseInt(monsters[i].style.left)<(parseInt(ball.style.left)+ball.width)) && (parseInt(monsters[i].style.top)>parseInt(ball.style.top)) && (parseInt(monsters[i].style.top)<(parseInt(ball.style.top)+ball.height))) || (((parseInt(monsters[i].style.left)+monster.width)>parseInt(ball.style.left)) && ((parseInt(monsters[i].style.left)+monster.width)<(parseInt(ball.style.left)+ball.width)) && ((parseInt(monsters[i].style.top)+monster.height)>parseInt(ball.style.top)) && ((parseInt(monsters[i].style.top)+monster.height)<(parseInt(ball.style.top)+ball.height))) || (((parseInt(monsters[i].style.left)+monster.width)>parseInt(ball.style.left)) && ((parseInt(monsters[i].style.left)+monster.width)<(parseInt(ball.style.left)+ball.width)) && (parseInt(monsters[i].style.top)>parseInt(ball.style.top)) && (parseInt(monsters[i].style.top)<(parseInt(ball.style.top)+ball.height))))
+{
+document.getElementsByTagName('audio')[0].play();
+setTimeout('stopper();',1000);
+
+for(j=0;j<3;j++)
+{
+monsters[j].style.left=(size*monpos[j][0])+'px';
+monsters[j].style.top=(size*monpos[j][1])+'px';
+}
+ball.style.top=0+'px';
+ball.style.left=(ball.width*1.25)+'px';
+}
+
+
+}                                //for
+
+
+setTimeout('gamify();',5);
+
+}
+
+
+
+function stopper()
+{
+//alert('stop');
+//document.getElementsByTagName('audio')[0].pause();
+//document.getElementsByTagName('audio')[0].currentTime=0;
+//document.getElementsByTagName('audio')[0].pause();
+document.getElementsByTagName('audio')[0].src=document.getElementsByTagName('audio')[0].src;
+}
+
+
+
+</script>
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body>
+
+<div style="top:0; left:0; position:absolute">
+<canvas id="canvas">
+</canvas>
+</div>
+
+
+<div id="game" style="top:0; left:0; position:absolute">
+
+<img src="maze.png" id="maze"  style="display:none; left:0; top:0; position:absolute"></img>
+
+<img src="ball.png" id="ball" style="display:none; top:0; position:absolute"></img>
+
+<img src="monster.png" id="monster" style="display:none; position:absolute"></img>
+
+</div>
+
+<audio src="scream.mp3"></audio>
+
+</body>
+
+</html>

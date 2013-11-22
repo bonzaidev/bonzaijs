@@ -1,0 +1,365 @@
+<html>
+<head>
+
+<style>
+
+#timer {
+	font-family:Verdana;
+	font-style:normal;
+	text-decoration:none;
+	}
+	
+#timer:focus {
+	color:#ff0000;
+	}
+
+</style>
+
+
+<script>
+//border: Solid 1px MistyRose;
+var maps,map;
+var bg,banner,full,hand,eaten,logo,design,blank,font,tops,when,because,Screen;
+var pizza=new Array();
+var timeout={};
+var min,mil,sec;
+var date;
+var t1,t;
+var prob;
+var count=0;
+var current;
+var Div;
+var asp;
+var ax,ay,aw,ah,xt,yt,xl,yl;
+var cods=[[0.4430,0.8155,0.5050,0.5550,0.8350,0.7050],[0.4430,0.8155,0.5050,0.5500,0.1390,0.6685],[0.1820,0.4100,0.5050,0.5500,0.1390,0.6685],[0.1820,0.4100,0.5050,0.5500,0.5555,0.2950],[0.8600,0.4500,0.5050,0.5500,0.5555,0.2950],[0.8600,0.4500,0.5050,0.5500,0.8350,0.7050]];
+var done=[false,false,false,false,false,false];
+
+window.onload=function()
+{
+	bg=document.getElementById('bg');
+	banner=document.getElementById('banner');
+	full=document.getElementById('full');
+	hand=document.getElementById('hand');
+	eaten=document.getElementById('eaten');
+	logo=document.getElementById('logo');
+	design=document.getElementById('design');
+	timer=document.getElementById('timer');
+	blank=document.getElementById('blank');
+	font=document.getElementById('font');
+	tops=document.getElementById('top');
+	when=document.getElementById('when');
+	because=document.getElementById('because');
+	Screen=document.getElementById('lastScreen');
+	
+	ax=banner.width/bg.width;
+	ay=banner.height/bg.height;
+	aw=design.width/bg.width;
+	ah=design.height/bg.height;
+	xt=(parseInt(timer.style.width))/bg.width;
+	yt=(parseInt(timer.style.height))/bg.height;
+	xl=tops.width/bg.width;
+	yl=tops.height/bg.height;
+        asp=bg.width/bg.height;
+	
+	bg.width=window.innerHeight*asp;
+	bg.height=window.innerHeight;
+
+        Div=document.getElementById('div');
+        Div.style.width=bg.width+'px';
+	
+	banner.width=ax*bg.width;
+	banner.height=ay*bg.height;
+	design.width=aw*bg.width;
+	design.height=ah*bg.height;
+	tops.width=xl*bg.width;
+	tops.height=yl*bg.height;
+	//tops.style.top=(parseInt(bg.style.top))+'px';
+
+	Screen.width=bg.width;
+	Screen.height=bg.height;
+	blank.width=bg.width;
+	blank.height=bg.height;
+	eaten.width=bg.width;
+	eaten.height=bg.height;
+	full.width=bg.width;
+	full.height=bg.height;
+	when.width=bg.width;
+	when.height=bg.height;
+	because.width=bg.width;
+	because.height=bg.height;
+	logo.width=bg.width;
+	logo.height=bg.height;
+	hand.width=bg.width;
+	hand.height=bg.height;
+        blank.style.left=parseInt(bg.style.left)+'px';
+	
+	timer.style.width=(xt*bg.width*2)+'px';
+	timer.style.height=(yt*bg.height)+'px';
+	timer.style.left=(parseInt(bg.style.left)+(parseInt(bg.width)*0.37))+'px';
+	timer.style.top=(parseInt(bg.height)*0.85)+'px';
+	timer.style.fontSize=(bg.height*20/624)+'px';
+	
+	for(var i=0;i<6;i++)
+		{
+			pizza[i]=document.getElementById(i+1);
+			pizza[i].width=bg.width;
+			pizza[i].height=bg.height;
+		}
+	mapping();
+	banner.style.top=(bg.height-banner.height)+'px';
+	banner.style.display='block';
+	tops.style.top=(bg.height*0.015)+'px';
+	window.onresize=resize;
+}
+
+
+function resize()
+{
+/*
+	ax=banner.width/bg.width;
+	ay=banner.height/bg.height;
+	aw=design.width/bg.width;
+	ah=design.height/bg.height;
+	xt=(parseInt(timer.style.width))/bg.width;
+	yt=(parseInt(timer.style.height))/bg.height;
+	
+*/
+	bg.width=window.innerHeight*asp;
+	bg.height=window.innerHeight;
+  
+        Div.style.width=bg.width+'px';
+	
+	banner.width=ax*bg.width;
+	banner.height=ay*bg.height;
+	design.width=aw*bg.width;
+	design.height=ah*bg.height;
+	tops.width=xl*bg.width;
+	tops.height=yl*bg.height;
+	
+	Screen.width=bg.width;
+	Screen.height=bg.height;
+	blank.width=bg.width;
+	blank.height=bg.height;
+	eaten.width=bg.width;
+	eaten.height=bg.height;
+	full.width=bg.width;
+	full.height=bg.height;
+	when.width=bg.width;
+	when.height=bg.height;
+	because.width=bg.width;
+	because.height=bg.height;
+	logo.width=bg.width;
+	logo.height=bg.height;
+	hand.width=bg.width;
+	hand.height=bg.height;
+        blank.style.left=parseInt(bg.style.left)+'px';
+
+	timer.style.width=(xt*bg.width*2)+'px';
+	timer.style.height=(yt*bg.height)+'px';
+	timer.style.left=(parseInt(bg.style.left)+(parseInt(bg.width)*0.37))+'px';
+	timer.style.top=(parseInt(bg.height)*0.85)+'px';
+	timer.style.fontSize=(bg.height*20/624)+'px';
+
+        banner.style.top=(bg.height-banner.height)+'px';
+	
+	for(var i=0;i<6;i++)
+		{
+			pizza[i].width=bg.width;
+			pizza[i].height=bg.height;
+		}
+
+mapping();
+}
+
+
+
+function page2()
+{
+	banner.style.display='none';
+//top banner
+	design.style.top=0+'px';
+	design.style.display='block';
+//full pizza
+	full.style.display='block';
+//hand moves in
+	hand.style.display='block';
+	timeout=setTimeout('eat()',1500);
+}
+
+
+function fadeOut()
+{
+	window.clearTimeout(timeout);
+	eaten.style.display='none';
+	logo.style.display='block';
+	for(var i=0;i<6;i++)
+		{
+			pizza[i].style.display='block';
+		}
+	blank.style.display='block';
+	timer.style.display='block';
+}
+
+
+function eat()
+{
+	window.clearTimeout(timeout);
+	full.style.display='none';
+	hand.style.display='none';
+	eaten.style.display='block';
+	timeout=setTimeout('fadeOut()',2500);
+}
+
+
+function slideLeft(obj)
+{
+	var objl=parseInt(obj.style.left);
+}
+
+
+function slideTop(obj)
+{
+
+
+}
+
+
+function time(val)
+{
+	if(count==0)
+	{
+		date=new Date();
+		t1=date.getTime();
+		execute();
+	}
+
+	if(!done[val-1])
+	{
+		++count;
+		current=document.getElementById(val);
+		current.parentNode.removeChild(current);
+        done[val-1]=true;
+	}
+}
+
+
+function execute()
+{
+	//alert(bg.width+' '+bg.height);
+	date=new Date();
+	t2=date.getTime()-t1;
+	mil=t2%1000;
+	t2=Math.floor(t2/1000);
+	sec=t2%60;
+	t2=Math.floor(t2/60);
+	min=t2%60;
+	timer.innerHTML=min+' : '+sec+' : '+mil;
+	if(count<6)
+		{
+			timeout=setTimeout('execute()',10);
+		}
+	else if(count==6)
+		{            
+			setTimeout('secondLast()',1500);
+        }
+}
+
+
+function secondLast()
+{
+	logo.parentNode.removeChild(logo);
+	design.parentNode.removeChild(design);
+	timer.parentNode.removeChild(timer);
+	Screen.style.display='block';
+	tops.style.display='block';
+	when.style.display='block';
+	document.getElementById('id1').play(); 
+	setTimeout('Last()',4000);
+}
+
+
+function Last()
+{
+	when.parentNode.removeChild(when);
+	because.style.display='block';
+}
+
+
+function mapping()
+{
+
+	maps=document.getElementsByName('map');
+	map=maps[0];
+	var coords=[];
+	var areas=map.getElementsByTagName('area');
+	var len=areas.length;
+	for(var i=0;i<len;i++)
+	{	
+		coords[i]=areas[i].coords.split(',');
+		for(var j=0;j<3;j++)
+		{
+			coords[i][j*2]=bg.width*cods[i][j*2];
+			coords[i][j*2+1]=bg.height*cods[i][j*2+1];
+		}
+		areas[i].coords=coords[i].join(',');
+	}
+}
+	
+	
+
+
+
+
+
+
+</script>
+
+
+</head>
+
+
+<body>
+
+<div id="div" style="margin: 0 auto;">
+
+<img src="BG.png" id="bg" style="display:block"/>
+<img src="banner.png" id="banner" style="display:none; position:absolute; top:0" onclick="page2();"/>
+<img src="when.png" id="when" style="display:none; top:0; position:absolute;"/>
+<img src="because.png" id="because" style="display:none; top:0; position:absolute;"/>
+<img src="full_pizza.png" id="full" style="display:none; position:absolute; top:0;"/>
+<img src="hand_click.png" id="hand" style="display:none; position:absolute; top:0; "/>
+<img src="Pizza_A.png" id="eaten" style="display:none; position:absolute; top:0; "/>
+<img src="Docomo_logo.png" id="logo" style="display:none; position:absolute; top:0; "/>
+
+<img src="Pizza_1.png" id="1" style="display:none; position:absolute; top:0; " />
+<img src="Pizza_2.png" id="2" style="display:none; position:absolute; top:0; " />
+<img src="Pizza_3.png" id="3" style="display:none; position:absolute; top:0; " />
+<img src="Pizza_4.png" id="4" style="display:none; position:absolute; top:0; " />
+<img src="Pizza_5.png" id="5" style="display:none; position:absolute; top:0; " />
+<img src="Pizza_6.png" id="6" style="display:none; position:absolute; top:0; " />
+
+<img src="Top_design_with_text.png" id="design" style="display:none; position:absolute;"/>
+<img src="top_design.png" id="top" style="display:none; position:absolute; top:0"/>
+<img src="lastScreen.png" id="lastScreen" style="display:none; position:absolute; top:0"/>
+<img src="Blank_screen.png" id="blank"; style="top:0; position:absolute; z-index:9999; display:none" usemap="#map"/>
+
+<map name="map">
+	<area shape="polygon" onclick="time(1);"/>
+	<area shape="polygon" onclick="time(2);"/>
+	<area shape="polygon" onclick="time(3);"/>
+	<area shape="polygon" onclick="time(4);"/>
+	<area shape="polygon" onclick="time(5);"/>
+	<area shape="polygon" onclick="time(6);"/>
+</map>
+
+<div id="timer" style="top:0; width:150; height:30; position:absolute; display:none; z-index:999"></div>
+
+
+<audio id="id1" src="docomo.mp3" loop preload="load"></audio>
+
+</div>
+
+
+</body>
+
+</html>	

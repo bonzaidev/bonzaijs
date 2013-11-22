@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script src="scripts/kinetic.js"></script>
+    <script defer="defer">
+      var stage = new Kinetic.Stage({
+        container: 'container',
+        width: 800,
+        height: 600
+      });
+      var layer = new Kinetic.Layer();
+
+      var hexagon = new Kinetic.RegularPolygon({
+        x: 100,
+        y: 200,
+        sides: 6,
+        radius: 70,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 4
+      });
+
+
+var rect2 = new Kinetic.Rect({
+          x: 100;
+          y: 200;
+          width: 40,
+          height: 60,
+          offset: [100,10],
+          fill: 'red',
+          stroke: 'black',
+          strokeWidth: 4
+      });
+
+
+/*
+var rect1 = new Kinetic.Rect({
+        x: 100,
+        y: 200,
+        width: 40,
+        height: 60,
+        offset: [100, 10],
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 4
+      });
+
+*/
+      layer.add(hexagon);
+      layer.add(rect2);
+      stage.add(layer);
+
+  
+    </script>
+  </body>
+</html>

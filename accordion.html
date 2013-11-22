@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+</script>
+<script> 
+$(document).ready(function(){
+  $("#flip").click(function(){
+    $("#panel").slideDown("slow");
+    $("#sblog").slideUp("slow");
+    $("#tblog").slideUp("slow");
+  });
+
+  $("#second").click(function(){
+    $("#sblog").slideDown("slow");
+    $("#panel").slideUp("slow");
+    $("#tblog").slideUp("slow");
+  });
+
+  $("#third").click(function(){
+    $("#tblog").slideDown("slow");
+    $("#panel").slideUp("slow");
+    $("#sblog").slideUp("slow");
+  });
+});
+
+</script>
+ 
+<style type="text/css"> 
+#panel,#flip,#second,#sblog,#third,#tblog
+{
+padding:5px;
+text-align:center;
+background-color:#e5eecc;
+border:solid 1px #c3c3c3;
+}
+#panel,#sblog,#tblog
+{
+padding:50px;
+display:none;
+}
+#tblog
+{
+display:block;
+}
+div
+{
+-webkit-tap-highlight-color:transparent;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-o-user-select: none;
+user-select: none;
+}
+</style>
+</head>
+<body>
+ 
+<div id="flip">Click to slide the panel down or up</div>
+<div id="panel">Hello world!</div>
+<div id="second">Click to read second blog</div>
+<div id="sblog">So tell me what you want me to put here</div>
+<div id="third">Click to read more</div>
+<div id="tblog">now your reading the third blog</div>
+</body>
+</html>

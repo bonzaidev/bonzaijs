@@ -1,0 +1,211 @@
+<html>
+
+<head>
+
+<style>
+
+#anim
+{
+overflow:hidden;
+}
+
+</style>
+
+<script>
+
+var i,j,k;
+var anim;
+var ajaxCon;
+var str;
+var val;
+var open=true;
+var width,height;
+var response;
+var db;
+var qr;
+
+
+window.onload=function()
+{
+width=window.innerWidth;
+height=window.innerHeight;
+document.getElementsByTagName('input')[1].onclick=doit;
+db=document.getElementById('debug');
+}
+
+
+function doit()
+{
+
+anim=document.getElementsByTagName('img')[0].cloneNode(true);
+anim.src=anim.src+'?rnd='+Math.random()+'';
+anim.style.position='absolute';
+anim.style.display='block';
+anim.style.left=0+'px';
+anim.width=width;
+anim.height=(width*480)/640;
+anim.style.top=(height-anim.height)/2+'px';
+
+open=true;
+
+try
+{
+ajaxCon = new XMLHttpRequest();
+}
+catch (e)
+{
+try
+{
+ajaxCon = new ActiveXObject("Msxml2.XMLHTTP");
+}
+catch (e)
+{
+try
+{
+ajaxCon = new ActiveXObject("Microsoft.XMLHTTP");
+}
+catch (e)
+{
+alert("Update your Browser");
+return false;
+}
+}
+}
+
+val=document.getElementById('number').value;
+
+if(val.length>0)
+{
+for(i=0;i<val.length;i++)
+{
+if(val.charCodeAt(i)<48 || val.charCodeAt(i)>57)
+open=false;
+}
+}
+else
+open=false;
+
+if(open && val.length==10)
+{
+str='http://chart.apis.google.com/chart?cht=qr&chs=500x500&choe=UTF-8&chld=H&chl=www.core-projects.freevar.com/loopAnim.html?'+document.getElementById('number').value;
+console.log(str);
+qr=new Image();
+qr.style.position='absolute';
+qr.src=str;
+qr.width=(height*0.5);
+qr.height=(height*0.5);
+qr.style.left=(width-qr.width)+'px';
+qr.style.top=(height-qr.height)+'px';
+document.getElementById('qr').appendChild(qr);
+//document.getElementById('qr').innerHTML='<img src="'+str+'" width='+(height*0.5)+' height='+(height*0.5)+'/>';
+
+document.getElementById('anim').appendChild(anim);
+
+document.getElementsByTagName('input')[0].style.display='none';
+document.getElementsByTagName('input')[1].style.display='none';
+
+
+ajaxCon.open("GET","loopAjax.php?number="+val,true);
+ajaxCon.send(null);
+
+ajaxCon.onreadystatechange=function()
+{
+if(ajaxCon.readyState==4)
+{
+console.log("calculating");
+response=ajaxCon.responseText.split(',');
+console.log(response[0]+" "+response[1]+" "+response[2]+" "+response[3]+" "+response[4]);
+timer=(((parseInt(response[0])-1)*15000)-(((parseInt(response[4])*1000)+(parseFloat(response[3])*1000))-((parseInt(response[2])*1000)+(parseFloat(response[1])*1000))));
+total=parseInt(response[0]);
+setTimeout('cracker();',timer);
+}
+}
+
+
+}                                   //if open
+
+
+
+window.onresize=resize;
+}
+
+
+
+function resize()
+{
+width=window.innerWidth;
+height=window.innerHeight;
+
+
+qr.width=(height*0.5);
+qr.height=(height*0.5);
+qr.style.left=(width-qr.width)+'px';
+qr.style.top=(height-qr.height)+'px';
+
+
+anim.style.left=0+'px';
+anim.width=width;
+anim.height=(width*480)/640;
+anim.style.top=(height-anim.height)/2+'px';
+
+}
+
+
+
+
+function cracker()
+{
+//values.innerHTML='started';
+db.innerHTML='appending';
+document.getElementById('anim').appendChild(anim);
+db.innerHTML+='appended';
+setTimeout('crack();',15000);
+}
+
+
+function crack()
+{
+db.innerHTML+='removing';
+anim.parentNode.removeChild(anim);
+db.innerHTML+='removed';
+var queryString = "?total=" + total + "&number=" + val;
+console.log("loopAjaxend.php"+queryString);
+console.log("ended");
+//ajaxCon.open("GET", "loopAjaxend.php" + queryString, true);
+//ajaxCon.send(null);
+}
+
+
+
+
+
+
+
+
+
+</script>
+
+</head>
+
+<body>
+
+<input type="text" id="number" value="9773874287"/>
+
+<input type="button" value="submit"/>
+
+<div id="debug" style="left:0; top:0; position:absolute">
+</div>
+
+<div id="qr">
+</div>
+
+<div id="anim" width=100% height=100%>
+</div>
+
+<img src="car-anim.gif" style="display:none; left:0; top:0; position:absolute">
+</img>
+
+</body>
+
+
+</html>

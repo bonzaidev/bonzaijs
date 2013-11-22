@@ -1,0 +1,352 @@
+<html>
+<head>
+ <style>
+ body {
+           margin: 0px;
+           padding: 0px;
+           }
+</style>
+
+
+</head>
+
+
+
+<body>
+
+<div id="container"></div>
+
+<script src="scripts/kinetic.js"></script>
+<script defer="defer">
+var pos;
+var angularSpeed=Math.PI*4;                                               //explosion rotation
+
+
+var stage=new Kinetic.Stage({
+container : 'container',
+width: 400,
+height: 500
+});
+
+var fireObj = new Image();
+ fireObj.src = 'images/explosion.png';
+ 
+var hero=new Image();
+ hero.src='images/mycar.png'; 
+ 
+ var villain1=new Image();
+ villain1.src='images/vill1.png';
+ 
+ var villain2=new Image();
+ villain2.src='images/vill2.png';
+ 
+ var villain3=new Image();
+ villain3.src='images/vill3.png';
+
+var roadLayer=new Kinetic.Layer();
+var layer=new Kinetic.Layer();
+
+var animated=new Array();
+var opp=new Array();
+
+
+var bg = new Kinetic.Rect({
+        x: 0,
+        y: 0,
+        width: stage.getWidth(),
+        height: stage.getHeight(),
+        //offset: [100, 10],
+        fill: '#00FF00',
+        stroke: 'black',
+        strokeWidth: 4,
+        draggable: false
+      });
+roadLayer.add(bg);
+
+
+var road = new Kinetic.Rect({
+        x: stage.getWidth()/2-110,
+        y: 0,
+        width: 220,
+        height: stage.getHeight(),
+        //offset: [100, 10],
+        fill: 'grey',
+        stroke: 'black',
+        strokeWidth: 4,
+        draggable: false
+      });
+	  
+
+var myCar = new Kinetic.Image({
+        x: stage.getWidth()/2-55,
+        y: stage.getHeight()-120,
+        width: 45,
+        height: 80,
+		image: hero,
+		 //offset:[25,25],
+        //fill: '#FF6600',
+        //stroke: 'black',
+        //strokeWidth: 4,
+        draggable: true
+      });
+
+
+pos=Math.round(Math.random());
+	  opp[0] = new Kinetic.Image({
+        x: stage.getWidth()/2-(pos*70)+10,
+        y: 0,
+        width: 50,
+        height: 80,
+		image: villain1,
+		 //offset:[25,25],
+        //fill: '#FF6600',
+        //stroke: 'black',
+        //strokeWidth: 4,
+        draggable: true,
+		visible:true
+      });
+	  
+
+pos=Math.round(Math.random());
+	  opp[1] = new Kinetic.Image({
+        x: stage.getWidth()/2-(pos*70)+10,
+        y: -200,
+        width: 50,
+        height: 80,
+		image: villain2,
+		 //offset:[25,25],
+        //fill: '#FF6600',
+        //stroke: 'black',
+        //strokeWidth: 4,
+        draggable: true,
+		visible:true
+      });
+
+
+pos=Math.round(Math.random());
+	  opp[2] = new Kinetic.Image({
+        x: stage.getWidth()/2-(pos*70)+10,
+        y: -400,
+        width: 50,
+        height: 80,
+		image: villain3,
+		 //offset:[25,25],
+        //fill: '#FF6600',
+        //stroke: 'black',
+        //strokeWidth: 4,
+        draggable: true,
+		visible:true
+      });
+
+
+	  
+roadLayer.add(road);
+stage.add(roadLayer);
+stage.add(layer);
+
+
+
+
+
+
+
+createRect(stage.getWidth/2-90,0,10,40,'white',0,10);
+createRect(stage.getWidth/2+80,0,10,40,'white',3,10);
+createRect(stage.getWidth/2-90,-200,10,40,'white',1,10);
+createRect(stage.getWidth/2+80,-200,10,40,'white',4,10);
+createRect(stage.getWidth/2-90,-400,10,40,'white',2,10);
+createRect(stage.getWidth/2+80,-400,10,40,'white',5,10);
+pos=Math.round(Math.random());
+createRect(stage.getWidth()/2-(pos*70)+30,0,50,80,'red',6,5);
+pos=Math.round(Math.random());
+createRect(stage.getWidth()/2-(pos*70)+30,-200,50,80,'yellow',7,5);
+pos=Math.round(Math.random());
+createRect(stage.getWidth()/2-(pos*70)+30,-400,50,80,'purple',8,5);
+
+//+10
+
+layer.add(myCar);
+
+
+
+
+function createRect(x,y,width,height,color,index,pixels)
+{
+
+opp[0].setVisible(true);
+opp[1].setVisible(true);
+opp[2].setVisible(true);
+
+	var blueRect = new Kinetic.Image({
+          x: 50,
+          y: 75,
+          width: 50,
+          height: 50,
+		  image: fireObj,
+		  offset:[25,25],
+		  visible:false
+        });
+		
+if(index<6)
+{
+		
+	animated[index]=new Kinetic.Rect({
+			x:x,
+			y:y,
+			width:width,
+			height:height,
+			fill:color,
+			stroke:'black',
+			strokeWidth:2,
+		});
+		
+		layer.add(animated[index]);
+		//layer.draw();
+		
+		
+		
+		animated[index].anim = new Kinetic.Animation(function(frame) {                                                       //animation closure
+        animated[index].setY(animated[index].getY()+pixels);
+        if((animated[index].getY()>stage.getHeight()) && (index>5))
+			{
+				animated[index].setY(-120);
+				animated[index].setX(stage.getWidth()/2-(Math.round(Math.random())*70)+10);
+				bg.setFill('green');
+			}
+
+		else if((animated[index].getY()>stage.getHeight()) && (index<6 && index>2))
+            {
+               animated[index].setY(-120);
+               animated[index].setX(stage.getWidth()/2+80);
+            }
+	    else if((animated[index].getY()>stage.getHeight()) && (index<3))
+            {
+               animated[index].setY(-120);
+               animated[index].setX(stage.getWidth()/2-90);
+            }
+			
+			},layer);
+			
+}
+			
+			
+else
+
+{
+
+
+opp[index-6].setVisible(true);
+layer.add(opp[index-6]);
+
+
+
+			opp[index-6].anim = new Kinetic.Animation(function(frame) {                                                       //animation closure
+        opp[index-6].setY(opp[index-6].getY()+pixels);
+        if((opp[index-6].getY()>stage.getHeight()) && (index>5))
+			{
+				opp[index-6].setY(-120);
+				opp[index-6].setX(stage.getWidth()/2-(Math.round(Math.random())*70)+10);
+				bg.setFill('green');
+			}
+
+			
+			
+		if((myCar.getX()>(stage.getWidth()/2+100)) || (myCar.getX()<(stage.getWidth()/2-120)))
+             {
+			 myCar.setDraggable(false);
+			 for(var i=0;i<6;i++)
+			   {
+				animated[i].anim.stop();
+			   }
+			   for(var i=0;i<3;i++)
+			   {
+			   opp[i].anim.stop();
+			   }
+			   //anime.start();
+			 }
+
+		if(myCar.getX()<(opp[index-6].getX()+50) && myCar.getX()>opp[index-6].getX() && myCar.getY()>opp[index-6].getY() && myCar.getY()<(opp[index-6].getY()+80))
+			 {
+			 myCar.setDraggable(false);
+			 for(var i=0;i<6;i++)
+			   {
+				animated[i].anim.stop();	
+			   }
+			   for(var i=0;i<3;i++)
+			   {
+			   opp[i].anim.stop();
+			   }
+			   
+		
+			    blueRect.setX(myCar.getX());
+				blueRect.setY(myCar.getY());
+				blueRect.setVisible(true);
+				layer.add(blueRect);
+				anime.start();
+			 }
+
+		else if((myCar.getX()+50)>opp[index-6].getX() && (myCar.getX()+50)<(opp[index-6].getX()+50) && myCar.getY()>opp[index-6].getY() && myCar.getY()<(opp[index-6].getY()+80))
+			 {
+			  myCar.setDraggable(false);
+			  for(var i=0;i<6;i++)
+				{
+				 animated[i].anim.stop();
+				}
+				for(var i=0;i<3;i++)
+			   {
+			   opp[i].anim.stop();
+			   }
+			
+				blueRect.setX(myCar.getX()+35);
+				blueRect.setY(myCar.getY());
+				blueRect.setVisible(true);
+				layer.add(blueRect);
+				anime.start();
+			 }
+				
+			
+		},layer);
+		
+		
+		
+
+		var angularSpeed = Math.PI / 2;
+        var anime = new Kinetic.Animation(function(frame) {
+          var angleDiff = frame.timeDiff * angularSpeed / 1000;
+          blueRect.rotate(angleDiff);
+        }, layer);
+		
+
+		
+
+}
+
+
+
+		if(index<6)
+		animated[index].anim.start();
+		else
+		opp[index-6].anim.start();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
